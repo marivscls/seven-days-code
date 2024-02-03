@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using RestSharp;
-
+﻿using RestSharp;
+using System.Text.Json;
+using seven_days_of_code.models;
 class Program
 {
     static async Task Main()
@@ -16,13 +15,32 @@ class Program
 
         RestResponse response = await client.ExecuteAsync(request);
 
+
+
         if (response.IsSuccessful)
         {
-            Console.WriteLine(response.Content);
+
+
+            var mascotPokemon = JsonSerializer.Deserialize<MascotPokemon>(response.Content);
+
+            Console.WriteLine(mascotPokemon.name);
+            Console.WriteLine(mascotPokemon.height);
+            Console.WriteLine(mascotPokemon.weight);
+
+
+            Console.WriteLine("Habilidades:");
+
+            foreach (var ability in mascotPokemon.abilities)
+            {
+                Console.WriteLine(ability.ability.name);
+            }
         }
         else
         {
             Console.WriteLine($"Erro na requisição: {response.ErrorMessage}");
         }
+
     }
+
 }
+
